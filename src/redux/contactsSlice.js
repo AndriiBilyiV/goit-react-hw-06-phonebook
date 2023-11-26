@@ -6,10 +6,10 @@ const addContact = (contacts, name, tel) => {
   if (
     contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())
   ) {
-    alert(`${b} is alredy in contact list`);
+    alert(`${name} is alredy in contact list`);
     return contacts;
   }
-  return [...a, { id: nanoid(), name: name, tel: tel }];
+  return [...contacts, { id: nanoid(), name: name, tel: tel }];
 };
 
 const contactsSlice = createSlice({
