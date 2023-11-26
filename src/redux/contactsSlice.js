@@ -2,12 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 import { sample } from 'tempContacts';
 import { nanoid } from 'nanoid';
 
-const addContact = (a, b, c) => {
-  if (a.find(contact => contact.name.toLowerCase() === b.toLowerCase())) {
+const addContact = (contacts, name, tel) => {
+  if (
+    contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())
+  ) {
     alert(`${b} is alredy in contact list`);
-    return;
+    return contacts;
   }
-  return [...a, { id: nanoid(), name: b, tel: c }];
+  return [...a, { id: nanoid(), name: name, tel: tel }];
 };
 
 const contactsSlice = createSlice({
