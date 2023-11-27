@@ -1,8 +1,10 @@
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { FieldTitle, StyledForm, ValidError } from './InputForm.styled';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { add } from 'redux/contactsSlice';
+import { nanoid } from 'nanoid';
+import { getContacts } from 'redux/selectors';
 
 const cardSchema = Yup.object().shape({
   name: Yup.string().min(3, 'Too short').required('This field is required'),
@@ -11,6 +13,28 @@ const cardSchema = Yup.object().shape({
 
 export const InputForm = () => {
   const dispach = useDispatch();
+  const contacts = useSelector(getContacts);
+
+  const checkAvailability = name => {
+    if (
+      contacts.find(
+        contact => contact.name.toLowerCase() === name.toLowerCase()
+      )
+    ) {
+      alert(`${name} is alredy in contact list`);
+      return false;
+    } else {
+      return true;
+    }
+  };
+  const addContact = ({ name, tel }) => {
+    const data = {
+      name: name,
+      tel: tel,
+      id: nanoid(),
+    };
+    dispach(add(data));
+  };
 
   return (
     <div>
@@ -21,8 +45,10 @@ export const InputForm = () => {
         }}
         validationSchema={cardSchema}
         onSubmit={(values, actions) => {
-          dispach(add(values));
-          actions.resetForm();
+          if (checkAvailability(values.name)) {
+            addContact(values);
+            actions.resetForm();
+          }
         }}
       >
         <StyledForm>

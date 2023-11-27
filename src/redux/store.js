@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { filterReducer } from './filterSlice';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -16,7 +16,12 @@ export const store = configureStore({
     filter: filterReducer,
     contacts: persistedContactsReducer,
   },
-  middleware: [],
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['persist/PERSIST'],
+      },
+    }),
 });
 
 export const persistor = persistStore(store);
